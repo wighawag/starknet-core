@@ -1,6 +1,6 @@
 {
   "name": "starknet-core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "core utilities of starknet.js in its own package",
   "type": "module",
   "main": "./dist/index.js",
@@ -35,6 +35,12 @@
       "import": {
         "types": "./dist/utils/stark.d.ts",
         "default": "./dist/utils/stark.js"
+      }
+    },
+    "./utils/shortString": {
+      "import": {
+        "types": "./dist/utils/shortString.d.ts",
+        "default": "./dist/utils/shortString.js"
       }
     },
     "./utils/transaction": {
