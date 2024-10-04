@@ -1,0 +1,113 @@
+{
+  "name": "starknet-core",
+  "version": "0.0.2",
+  "description": "core utilities of starknet.js in its own package",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./constants": {
+      "import": {
+        "types": "./dist/constants.d.ts",
+        "default": "./dist/constants.js"
+      }
+    },
+    "./utils": {
+      "import": {
+        "types": "./dist/utils/index.d.ts",
+        "default": "./dist/utils/index.js"
+      }
+    },
+    "./utils/calldata": {
+      "import": {
+        "types": "./dist/utils/calldata/index.d.ts",
+        "default": "./dist/utils/calldata/index.js"
+      }
+    },
+    "./utils/stark": {
+      "import": {
+        "types": "./dist/utils/stark.d.ts",
+        "default": "./dist/utils/stark.js"
+      }
+    },
+    "./utils/transaction": {
+      "import": {
+        "types": "./dist/utils/transaction.d.ts",
+        "default": "./dist/utils/transaction.js"
+      }
+    },
+    "./utils/num": {
+      "import": {
+        "types": "./dist/utils/num.d.ts",
+        "default": "./dist/utils/num.js"
+      }
+    },
+    "./utils/hash": {
+      "import": {
+        "types": "./dist/utils/hash/index.d.ts",
+        "default": "./dist/utils/hash/index.js"
+      }
+    },
+    "./utils/hash/transactionHash": {
+      "import": {
+        "types": "./dist/utils/hash/transactionHash/index.d.ts",
+        "default": "./dist/utils/hash/transactionHash/index.js"
+      }
+    },
+    "./utils/hash/transactionHash/v2": {
+      "import": {
+        "types": "./dist/utils/hash/transactionHash/v2.d.ts",
+        "default": "./dist/utils/hash/transactionHash/v2.js"
+      }
+    },
+    "./utils/hash/transactionHash/v3": {
+      "import": {
+        "types": "./dist/utils/hash/transactionHash/v3.d.ts",
+        "default": "./dist/utils/hash/transactionHash/v3.js"
+      }
+    },
+    "./types": {
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/types/index.js"
+      }
+    },
+    "./types/lib": {
+      "import": {
+        "types": "./dist/types/lib/index.d.ts",
+        "default": "./dist/types/lib/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "dependencies": {
+    "@noble/curves": "^1.6.0",
+    "@noble/hashes": "^1.5.0",
+    "@scure/base": "^1.1.9",
+    "@scure/starknet": "^1.0.0",
+    "@starknet-io/types-js": "^0.7.7",
+    "pako": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/pako": "^2.0.3",
+    "as-soon": "^0.0.9",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "as-soon -w src pnpm build",
+    "start": "ska",
+    "format:check": "prettier --check ."
+  }
+}
