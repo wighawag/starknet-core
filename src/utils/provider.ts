@@ -2,25 +2,17 @@ import { NetworkName, RPC_NODES } from '../constants.js';
 import {
   BlockIdentifier,
   BlockTag,
-  CompiledContract,
-  CompiledSierra,
-  ContractClass,
   GetBlockResponse,
   InvocationsDetailsWithNonce,
-  LegacyContractClass,
   PendingBlock,
   PendingStateUpdate,
-  SierraContractClass,
   StateUpdateResponse,
   V3TransactionDetails,
 } from '../types/index.js';
 import { ETransactionVersion } from '../types/api/index.js';
-import { isSierra } from './contract.js';
-import { formatSpaces } from './hash/index.js';
 import { isHex, toHex } from './num.js';
 import { isDecimalString } from './shortString.js';
 import { isBigInt, isNumber, isString } from './typed.js';
-import { compressProgram } from './stark.js';
 import type { GetTransactionReceiptResponse } from './transactionReceipt.js';
 
 /**
@@ -37,73 +29,6 @@ export function wait(delay: number): Promise<unknown> {
   return new Promise((res) => {
     setTimeout(res, delay);
   });
-}
-
-/**
- * Create Sierra compressed Contract Class from a given Compiled Sierra
- *
- * CompiledSierra -> SierraContractClass
- *
- * @param {CompiledSierra} contract sierra code from the Cairo compiler
- * @returns {SierraContractClass} compressed Sierra
- * @example
- * ```typescript
- * const result = provider.createSierraContractClass({
-    "sierra_program": [
-        "0x1",
-        "0x4",
-        "0x0",
-        "0x2",
-        "0x4",
-        "0x1",
-        "0x3b4",
-        "0x4c",
-        "0x65",
-        "0x52616e6765436865636b",...})
- * // result = {sierra_program: 'H4sIAAAAAAAAA6x9WZbsrI7uVGqd53qgb8ZynwzYY7jDv5JAAmxHZuQ+96yq/L0jIzEINZ8axP/5j/q/+j//+z/wH9f/o/p/zPbh+Iot49+u9v8G3//rTdDhDDF4Z0MKPthQ+m+S2v6n1S//638VvdXW2PQ6RvxuDG+jiybCXKJ7Hef6ZRi9E+Q89WmKLilfqbrsL6PUCf8...}
- * ```
- */
-export function createSierraContractClass(contract: CompiledSierra): SierraContractClass {
-  const result = { ...contract } as any;
-  delete result.sierra_program_debug_info;
-  result.abi = formatSpaces(JSON.stringify(contract.abi));
-  result.sierra_program = formatSpaces(JSON.stringify(contract.sierra_program));
-  result.sierra_program = compressProgram(result.sierra_program);
-  return result;
-}
-
-/**
- * Create a compressed contract from a given compiled Cairo 0 & 1 contract or a string.
- * @param {CompiledContract | string} contract - Compiled Cairo 0 or Cairo 1 contract, or string
- * @returns {ContractClass} Cairo 0 or Cairo 1 compressed contract
- * @example
- * ```typescript
- * const result = provider.parseContract({
-    "sierra_program": [
-        "0x1",
-        "0x4",
-        "0x0",
-        "0x2",
-        "0x4",
-        "0x1",
-        "0x3b4",
-        "0x4c",
-        "0x65",
-        "0x52616e6765436865636b",...})
- * // result = {sierra_program: 'H4sIAAAAAAAAA6x9WZbsrI7uVGqd53qgb8ZynwzYY7jDv5JAAmxHZuQ+96yq/L0jIzEINZ8axP/5j/q/+j//+z/wH9f/o/p/zPbh+Iot49+u9v8G3//rTdDhDDF4Z0MKPthQ+m+S2v6n1S//638VvdXW2PQ6RvxuDG+jiybCXKJ7Hef6ZRi9E+Q89WmKLilfqbrsL6PUCf8...}
- * ```
- */
-export function parseContract(contract: CompiledContract | string): ContractClass {
-  const parsedContract = isString(contract) ? (JSON.parse(contract) as CompiledContract) : contract;
-
-  if (!isSierra(contract)) {
-    return {
-      ...parsedContract,
-      ...('program' in parsedContract && { program: compressProgram(parsedContract.program) }),
-    } as LegacyContractClass;
-  }
-
-  return createSierraContractClass(parsedContract as CompiledSierra);
 }
 
 /**

@@ -1,5 +1,4 @@
 import { getPublicKey, getStarkKey, utils } from '@scure/starknet';
-import { gzip, ungzip } from 'pako';
 
 import { ZERO, FeeMarginPercentage } from '../constants.js';
 import {
@@ -44,59 +43,6 @@ type V3Details = Required<
     | 'resourceBounds'
   >
 >;
-
-/**
- * Compress compiled Cairo 0 program
- *
- * [Reference](https://github.com/starkware-libs/cairo-lang/blob/master/src/starkware/starknet/services/api/gateway/transaction.py#L54-L58)
- * @param {Program | string} jsonProgram Representing the compiled Cairo 0 program
- * @return {CompressedProgram} Compressed Cairo 0 program
- * @example
- * ```typescript
- * const contractCairo0 = json.parse(fs.readFileSync("./cairo0contract.json").toString("ascii"));
- * const result = stark.compressProgram(contractCairo0);
- * // result = "H4sIAAAAAAAAA+1dC4/bOJL+K4aBu01me7r5EEUyixzQk/TuB..."
- * ```
- */
-export function compressProgram(jsonProgram: Program | string): CompressedProgram {
-  const stringified = isString(jsonProgram) ? jsonProgram : JSON.stringify(jsonProgram);
-  const compressedProgram = gzip(stringified);
-  return btoaUniversal(compressedProgram);
-}
-
-/**
- * Decompress compressed compiled Cairo 0 program
- * @param {CompressedProgram | CompressedProgram[]} base64 Compressed Cairo 0 program
- * @returns Parsed decompressed compiled Cairo 0 program
- * @example
- * ```typescript
- * const contractCairo0 = json.parse(fs.readFileSync("./cairo0contract.json").toString("ascii"));
- * const compressedCairo0 = stark.compressProgram(contractCairo0);
- * const result = stark.decompressProgram(compressedCairo0);
- * // result = {
- * //   abi: [
- * //     {
- * //       inputs: [Array],
- * //       name: 'increase_balance',
- * //       outputs: [],
- * //       type: 'function'
- * //     }
- * //   ],
- * //   entry_points_by_type: { CONSTRUCTOR: [], EXTERNAL: [ [Object], [Object] ], L1_HANDLER: [] },
- * //   program: {
- * //     attributes: [],
- * //     builtins: [ 'pedersen', 'range_check' ],
- * //     compiler_version: '0.10.2',
- * //     data: [
- * //       '0x480680017fff8000',
- * // ...
- * ```
- */
-export function decompressProgram(base64: CompressedProgram | CompressedProgram[]) {
-  if (Array.isArray(base64)) return base64;
-  const decompressed = arrayBufferToString(ungzip(atobUniversal(base64)));
-  return JSON.parse(decompressed);
-}
 
 /**
  * Random Address based on random keyPair
